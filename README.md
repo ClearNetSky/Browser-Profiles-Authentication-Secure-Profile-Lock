@@ -1,7 +1,7 @@
 # 🔒 Secure Profile Lock - Chrome Extension
 
 [![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/aonieimkkkiknekpipfblglanjganbol?color=blue)](https://chrome.google.com/webstore/detail/browser-profiles-authenti/aonieimkkkiknekpipfblglanjganbol)
-[![GitHub license](https://img.shields.io/badge/license-GPL%20v3-blue)](https://github.com/AristarhUcolov/Browser-Profiles-Authentication-Secure-Profile-Lock/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-GPL%20v3-blue)](https://github.com/ClearNetSky/Browser-Profiles-Authentication-Secure-Profile-Lock/blob/main/LICENSE)
 ![Manifest Version](https://img.shields.io/badge/manifest-v3-important)
 
 <div align="center">
@@ -41,7 +41,7 @@ Every time your browser restarts or when someone tries to access your protected 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/AristarhUcolov/Browser-Profiles-Authentication-Secure-Profile-Lock.git
+   git clone https://github.com/ClearNetSky/Browser-Profiles-Authentication-Secure-Profile-Lock.git
    cd Browser-Profiles-Authentication-Secure-Profile-Lock
    ```
 
