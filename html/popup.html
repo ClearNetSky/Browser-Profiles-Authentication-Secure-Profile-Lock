@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Profile Lock</title>
+  <link rel="stylesheet" href="../styles/styles.css">
+</head>
+<body class="popup">
+  <header class="popup-header">
+    <img src="../images/icon.png" alt="">
+    <div class="title">Secure Profile Lock</div>
+  </header>
+
+  <div class="popup-body">
+    <div id="status" class="status-pill status-unlocked">Checking…</div>
+
+    <button type="button" class="btn hidden" id="lockBtn">Lock Profile Now</button>
+    <button type="button" class="btn hidden" id="setupBtn">Set Up Password</button>
+    <button type="button" class="btn btn-ghost hidden" id="changeBtn">Change Password…</button>
+  </div>
+
+  <footer class="popup-footer">
+    <span id="version"></span>
+    <span>Local only · No tracking</span>
+  </footer>
+
+  <script src="../scripts/popup.js"></script>
+</body>
+</html>

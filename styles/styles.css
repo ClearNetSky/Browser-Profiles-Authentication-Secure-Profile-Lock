@@ -1,94 +1,531 @@
+/* ===========================================================================
+   Secure Profile Lock — design system (v2)
+   Dark slate + blue, matching the extension icon.
+   =========================================================================== */
+
+:root {
+  --bg-0: #0d1420;
+  --bg-1: #131c2b;
+  --card: #16202f;
+  --card-border: rgba(255, 255, 255, 0.07);
+  --field: #0f1826;
+  --field-border: #263850;
+  --text: #e8edf4;
+  --text-muted: #93a1b5;
+  --text-faint: #5d6b80;
+  --accent: #4a90d9;
+  --accent-strong: #3178c0;
+  --accent-soft: rgba(74, 144, 217, 0.16);
+  --danger: #e5646c;
+  --danger-soft: rgba(229, 100, 108, 0.12);
+  --warning: #e0a63f;
+  --warning-soft: rgba(224, 166, 63, 0.12);
+  --success: #4cc38a;
+  --success-soft: rgba(76, 195, 138, 0.12);
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 4px 16px rgba(0, 0, 0, 0.3);
+  --font: 'Segoe UI Variable', 'Segoe UI', -apple-system, 'SF Pro Text', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f5f5;
+  font-family: var(--font);
   margin: 0;
-  padding: 0;
+  color: var(--text);
+  background: var(--bg-0);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------------------
+   Full-screen pages (unlock / setup)
+   --------------------------------------------------------------------------- */
+
+.page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  color: #333;
+  padding: 24px;
+  background:
+    radial-gradient(800px 500px at 50% -10%, rgba(74, 144, 217, 0.14), transparent 60%),
+    radial-gradient(600px 400px at 85% 110%, rgba(49, 120, 192, 0.10), transparent 60%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
 }
 
-.container {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.card {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 40px 36px 28px;
   text-align: center;
+  animation: card-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.card.shake {
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-9px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(3px); }
+}
+
+/* Lock badge --------------------------------------------------------------- */
+
+.lock-badge {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(140deg, var(--accent) 0%, var(--accent-strong) 100%);
+  box-shadow:
+    0 8px 24px rgba(74, 144, 217, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lock-badge svg {
+  width: 34px;
+  height: 34px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card.unlocked .lock-badge {
+  background: linear-gradient(140deg, var(--success) 0%, #2e9e6b 100%);
+  box-shadow:
+    0 8px 24px rgba(76, 195, 138, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* Headings ----------------------------------------------------------------- */
 
 h1 {
-  margin-top: 0;
-  color: #2c3e50;
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
+.subtitle {
+  margin: 0 0 28px;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+/* Form fields -------------------------------------------------------------- */
+
+.field {
+  margin-bottom: 18px;
   text-align: left;
 }
 
-label {
+.field label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 7px;
+  font-size: 13px;
   font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
-input {
+.input-wrap {
+  position: relative;
+}
+
+input[type='password'],
+input[type='text'] {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  box-sizing: border-box;
+  padding: 12px 14px;
+  background: var(--field);
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input-wrap input {
+  padding-right: 46px;
+}
+
+input::placeholder {
+  color: var(--text-faint);
 }
 
 input:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
+
+input:disabled {
+  opacity: 0.5;
+}
+
+/* Show/hide password toggle */
+
+.eye {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-faint);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.eye:hover {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.eye svg {
+  width: 19px;
+  height: 19px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Caps lock warning -------------------------------------------------------- */
+
+.caps-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--warning);
+}
+
+.caps-warning::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--warning);
+  flex-shrink: 0;
+}
+
+/* Password strength meter -------------------------------------------------- */
+
+.strength {
+  margin-top: 10px;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 5px;
+}
+
+.strength-bars span {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  background: var(--field-border);
+  transition: background 0.25s ease;
+}
+
+.strength-label {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--text-faint);
+  text-align: right;
+  min-height: 16px;
+  transition: color 0.25s ease;
+}
+
+.strength[data-score='1'] .strength-bars span:nth-child(-n + 1) { background: var(--danger); }
+.strength[data-score='2'] .strength-bars span:nth-child(-n + 2) { background: var(--warning); }
+.strength[data-score='3'] .strength-bars span:nth-child(-n + 3) { background: #b3c94a; }
+.strength[data-score='4'] .strength-bars span { background: var(--success); }
+
+.strength[data-score='1'] .strength-label { color: var(--danger); }
+.strength[data-score='2'] .strength-label { color: var(--warning); }
+.strength[data-score='3'] .strength-label { color: #b3c94a; }
+.strength[data-score='4'] .strength-label { color: var(--success); }
+
+/* Buttons ------------------------------------------------------------------ */
 
 .btn {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
   width: 100%;
-  transition: background-color 0.2s;
+  padding: 13px 20px;
+  margin-top: 6px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font);
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(140deg, var(--accent) 0%, var(--accent-strong) 100%);
+  box-shadow: 0 4px 14px rgba(74, 144, 217, 0.3);
+  transition: filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
-.btn:hover {
-  background-color: #2980b9;
+.btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 18px rgba(74, 144, 217, 0.4);
 }
 
-.hidden {
-  display: none;
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
-.error {
-  color: #e74c3c;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background-color: #fadbd8;
-  border-radius: 4px;
+.btn:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
-.success {
-  color: #27ae60;
-  margin-top: 1rem;
-  padding: 0.5rem;
-  background-color: #d5f5e3;
-  border-radius: 4px;
+.btn.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--field-border);
+  color: var(--text-muted);
+  box-shadow: none;
+}
+
+.btn.btn-ghost:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text);
+  filter: none;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  margin-top: 14px;
+  font-size: 13px;
+  font-family: var(--font);
+  color: var(--accent);
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.link-btn:hover {
+  background: var(--accent-soft);
+}
+
+/* Messages ----------------------------------------------------------------- */
+
+.message {
+  margin-top: 16px;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  line-height: 1.45;
+  text-align: left;
+  animation: msg-in 0.25s ease both;
+}
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.message.error {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border: 1px solid rgba(229, 100, 108, 0.25);
+}
+
+.message.warning {
+  color: var(--warning);
+  background: var(--warning-soft);
+  border: 1px solid rgba(224, 166, 63, 0.25);
+}
+
+.message.success {
+  color: var(--success);
+  background: var(--success-soft);
+  border: 1px solid rgba(76, 195, 138, 0.25);
 }
 
 .hint {
-  color: #7f8c8d;
-  font-style: italic;
-  margin-top: 1rem;
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  background: var(--field);
+  border: 1px dashed var(--field-border);
+  border-radius: var(--radius);
+  animation: msg-in 0.25s ease both;
+}
+
+/* Success state on setup page ---------------------------------------------- */
+
+.success-state {
+  animation: msg-in 0.35s ease both;
+}
+
+.success-state .success-check {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--success-soft);
+  border: 2px solid var(--success);
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.success-state .success-check svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--success);
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Footer ------------------------------------------------------------------- */
+
+.card-footer {
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid var(--card-border);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Toolbar popup
+   --------------------------------------------------------------------------- */
+
+body.popup {
+  width: 300px;
+  background: var(--bg-1);
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.popup-header img {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+
+.popup-header .title {
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.popup-body {
+  padding: 16px;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.status-pill::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.status-pill.status-unlocked {
+  color: var(--success);
+  background: var(--success-soft);
+}
+
+.status-pill.status-locked {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.status-pill.status-none {
+  color: var(--warning);
+  background: var(--warning-soft);
+}
+
+.popup-body .btn {
+  margin-top: 0;
+  padding: 11px 16px;
+  font-size: 14px;
+}
+
+.popup-body .btn + .btn {
+  margin-top: 10px;
+}
+
+.popup-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--card-border);
+  font-size: 11.5px;
+  color: var(--text-faint);
+  display: flex;
+  justify-content: space-between;
 }

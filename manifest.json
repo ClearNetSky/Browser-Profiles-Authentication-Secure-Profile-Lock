@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Browser Profiles Authentication - Secure Profile Lock",
-  "version": "1.0",
-  "description": "Password protection for all Browser Profiles",
+  "version": "2.0.0",
+  "description": "Password protection for all Browser Profiles. Locks your profile on every browser start — hashed password, 100% local, no tracking.",
   "permissions": [
     "storage",
     "tabs",
@@ -13,12 +13,21 @@
   "background": {
     "service_worker": "base_script/background.js"
   },
+  "action": {
+    "default_popup": "html/popup.html",
+    "default_title": "Secure Profile Lock",
+    "default_icon": {
+      "16": "images/icon.png",
+      "32": "images/icon.png",
+      "48": "images/icon.png"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["scripts/content.js"],
       "run_at": "document_start",
-      "all_frames": true
+      "all_frames": false
     }
   ],
   "web_accessible_resources": [
@@ -28,10 +37,11 @@
     }
   ],
   "icons": {
+    "16": "images/icon.png",
+    "32": "images/icon.png",
     "48": "images/icon.png",
     "128": "images/icon.png"
   },
   "author": "Aristarh Ucolov",
-  "homepage_url": "https://github.com/aristarhucolov",
-  "email": "aristarh.ucolov@gmail.com"
+  "homepage_url": "https://github.com/AristarhUcolov/Browser-Profiles-Authentication-Secure-Profile-Lock"
 }

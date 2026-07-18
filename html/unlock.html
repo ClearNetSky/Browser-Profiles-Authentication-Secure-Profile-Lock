@@ -1,30 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Profile Locked</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile Locked — Secure Profile Lock</title>
   <link rel="icon" href="../images/icon.png" type="image/png">
   <link rel="stylesheet" href="../styles/styles.css">
-  <meta charset="UTF-8">
 </head>
-<body>
-  <div class="container">
+<body class="page">
+  <main class="card" id="card">
+    <div class="lock-badge" aria-hidden="true">
+      <svg viewBox="0 0 24 24" id="lockIcon">
+        <rect x="4" y="10.5" width="16" height="10" rx="2.5"></rect>
+        <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path>
+        <circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none"></circle>
+      </svg>
+    </div>
+
     <h1>Profile Locked</h1>
-    <p>Enter your password to unlock this profile</p>
-    
-    <form id="unlockForm">
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
+    <p class="subtitle">Enter your password to unlock this browser profile.</p>
+
+    <form id="unlockForm" novalidate>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="password" autocomplete="current-password" autofocus>
+          <button type="button" class="eye" id="toggleEye" aria-label="Show password" tabindex="-1">
+            <svg viewBox="0 0 24 24" id="eyeIcon">
+              <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"></path>
+              <circle cx="12" cy="12" r="2.8"></circle>
+            </svg>
+          </button>
+        </div>
+        <div id="capsWarning" class="caps-warning hidden">Caps Lock is on</div>
       </div>
-      
-      <button type="submit" class="btn">Unlock</button>
+
+      <button type="submit" class="btn" id="submitBtn">Unlock</button>
     </form>
-    
-    <div id="message" class="hidden"></div>
-    
-    <p id="hint" class="hint"></p>
-  </div>
-  
+
+    <div id="message" class="message hidden" role="alert"></div>
+
+    <button type="button" id="hintToggle" class="link-btn hidden">Show hint</button>
+    <p id="hint" class="hint hidden"></p>
+
+    <footer class="card-footer">Secure Profile Lock · Your data never leaves this device</footer>
+  </main>
+
   <script src="../scripts/unlock.js"></script>
 </body>
 </html>
