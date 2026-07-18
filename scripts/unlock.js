@@ -1,6 +1,8 @@
 // Secure Profile Lock — unlock screen logic.
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await i18nReady;
+
   const card = document.getElementById('card');
   const form = document.getElementById('unlockForm');
   const passwordInput = document.getElementById('password');
@@ -24,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       hintToggle.addEventListener('click', () => {
         const show = hintDiv.classList.contains('hidden');
         hintDiv.classList.toggle('hidden', !show);
-        hintToggle.textContent = show ? 'Hide hint' : 'Show hint';
+        hintToggle.textContent = show ? t('hide_hint') : t('show_hint');
       });
     }
   } catch (e) {
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   toggleEye.addEventListener('click', () => {
     const show = passwordInput.type === 'password';
     passwordInput.type = show ? 'text' : 'password';
-    toggleEye.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    toggleEye.setAttribute('aria-label', show ? t('aria_hide_password') : t('aria_show_password'));
     passwordInput.focus();
   });
 
@@ -54,13 +56,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (submitBtn.disabled) return;
 
     if (!passwordInput.value) {
-      showMessage('Please enter your password.', 'error');
+      showMessage(t('err_enter_password'), 'error');
       shake();
       return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Unlocking…';
+    submitBtn.textContent = t('btn_unlocking');
 
     try {
       const result = await chrome.runtime.sendMessage({
@@ -74,19 +76,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         startCooldown(result.cooldownMs);
       } else {
         const left = result && result.attemptsLeft;
-        showMessage(
-          left
-            ? `Wrong password. ${left} attempt${left === 1 ? '' : 's'} left before a 30s cooldown.`
-            : 'Wrong password.',
-          'error'
-        );
+        showMessage(left ? t('err_wrong_attempts', left) : t('err_wrong_password'), 'error');
         shake();
         resetSubmit();
         passwordInput.value = '';
         passwordInput.focus();
       }
     } catch (error) {
-      showMessage('Could not reach the extension. Try reloading this page.', 'error');
+      showMessage(t('err_unreachable'), 'error');
       resetSubmit();
     }
   });
@@ -96,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     form.querySelectorAll('input, button').forEach((el) => (el.disabled = true));
     hintToggle.classList.add('hidden');
     hintDiv.classList.add('hidden');
-    showMessage('Unlocked — restoring your tabs…', 'success');
+    showMessage(t('msg_unlocked'), 'success');
     // The background script reloads/restores every tab a moment later.
   }
 
@@ -117,8 +114,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         passwordInput.focus();
         return;
       }
-      showMessage(`Too many attempts. Try again in ${remaining}s.`, 'warning');
-      submitBtn.textContent = `Wait ${remaining}s`;
+      showMessage(t('cooldown', remaining), 'warning');
+      submitBtn.textContent = t('wait_seconds', remaining);
       remaining -= 1;
     };
     tick();
@@ -128,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function resetSubmit() {
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Unlock';
+    submitBtn.textContent = t('btn_unlock');
   }
 
   function shake() {

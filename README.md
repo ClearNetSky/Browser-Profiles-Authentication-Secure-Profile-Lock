@@ -30,7 +30,10 @@ Every time your browser restarts or when someone tries to access your protected 
 - 🏠 **100% local storage** - Zero data collection, everything stays on your device
 - 🛡️ **Tamper-proof design** - Prevents bypassing through extension disabling
 - 💡 **Password hints** - Optional hints, revealed only on demand
-- 🎨 **Modern dark interface** - Redesigned unlock, setup, and popup screens with password strength meter, show/hide password, and Caps Lock warning
+- 🧹 **Auto-clear on lock (optional)** - Erase history, downloads, cache, cookies, and form data every time the profile locks, so a locked profile leaves no traces — even if the extension is removed
+- 😴 **Auto-lock on inactivity (optional)** - Lock the profile after a chosen period with no keyboard/mouse activity
+- 🌍 **Localized interface** - English and Russian, following your browser language, with a manual language switcher on every page in case auto-detection picks the wrong one
+- 🎨 **Modern dark interface** - Redesigned unlock, setup, settings, and popup screens with password strength meter, show/hide password, and Caps Lock warning
 
 ## 🚀 Installation
 
@@ -86,6 +89,15 @@ To change your password:
 
 > ⚠️ **Important:** There is no password recovery mechanism. If you forget your password, you'll need to remove and reinstall the extension, which will require setting up a new password.
 
+### Settings (optional features)
+
+Open the toolbar popup → **"Settings…"** (or right-click the icon → Options):
+
+- **Clear browsing data when the profile locks** — choose which data (history, downloads, cache, cookies, form data) is erased on every lock. Because the data is wiped *at lock time*, anyone who bypasses the lock by uninstalling the extension finds an already-clean profile. Chrome asks for the `browsingData` permission the first time you enable this.
+- **Lock automatically after inactivity** — pick an idle timeout (1–60 minutes). Chrome asks for the `idle` permission the first time you enable this.
+
+Both features are **off by default** — nothing changes until you turn them on.
+
 ## 🛠️ How It Works
 
 The extension uses Chrome's Manifest V3 architecture with the following components:
@@ -114,7 +126,9 @@ The extension uses Chrome's Manifest V3 architecture with the following componen
               └──► UI Pages
                    ├─ password-setup.html (Setup / change password)
                    ├─ unlock.html (Unlock screen)
-                   └─ popup.html (Toolbar popup)
+                   ├─ popup.html (Toolbar popup)
+                   ├─ options.html (Settings)
+                   └─ whatsnew.html (Update announcement)
 ```
 
 ### Security Model
@@ -124,6 +138,8 @@ The extension uses Chrome's Manifest V3 architecture with the following componen
 - **Lock Enforcement:** Content scripts stop page loading and replace the page with the lock screen until authentication succeeds.
 - **Navigation Control:** The web navigation API intercepts all page loads while locked and remembers the original URL so the tab can be restored after unlock.
 - **Tamper Protection:** Removing the lock screen from the page triggers an immediate reload, which locks it again.
+- **Clear-on-lock (optional):** Chrome does not allow extensions to run code at the moment they are uninstalled, so no extension can "delete history on uninstall". Instead, Secure Profile Lock can erase the selected data every time the profile *locks* — a locked profile therefore already contains no traces, and uninstalling the extension reveals nothing.
+- **Optional permissions:** `browsingData` and `idle` are requested at runtime only when you enable the corresponding feature, never at install or update time.
 
 ## 🔒 Security Considerations
 
@@ -151,19 +167,27 @@ The extension uses Chrome's Manifest V3 architecture with the following componen
 
 ```
 Browser-Profiles-Authentication-Secure-Profile-Lock/
+├── _locales/
+│   ├── en/messages.json      # English strings
+│   └── ru/messages.json      # Russian strings
 ├── base_script/
 │   └── background.js         # Service worker - core logic, hashing, throttling
 ├── html/
 │   ├── password-setup.html   # Password setup / change page
 │   ├── unlock.html           # Profile unlock page
-│   └── popup.html            # Toolbar popup
+│   ├── popup.html            # Toolbar popup
+│   ├── options.html          # Settings page
+│   └── whatsnew.html         # One-time update announcement
 ├── images/
 │   └── icon.png              # Extension icon
 ├── scripts/
 │   ├── content.js            # Content script injected into pages
+│   ├── i18n.js               # Localization helper for extension pages
 │   ├── password-setup.js     # Setup / change password logic
 │   ├── unlock.js             # Unlock screen logic
-│   └── popup.js              # Toolbar popup logic
+│   ├── popup.js              # Toolbar popup logic
+│   ├── options.js            # Settings page logic
+│   └── whatsnew.js           # Update announcement logic
 ├── styles/
 │   └── styles.css            # Shared design system (dark theme)
 ├── manifest.json             # Extension manifest (Manifest V3)
@@ -213,6 +237,12 @@ Contributions are welcome! Here's how you can help:
 
 ### Q: I updated from version 1.x. Do I need to do anything?
 **A:** No. Your existing password keeps working - it is automatically converted to a secure hash on the first run of version 2.0, and the plaintext copy is removed.
+
+### Q: Can the extension delete my history if someone uninstalls it to bypass the lock?
+**A:** Chrome never lets an extension run code at the moment it is uninstalled, so that exact behavior is impossible for any extension. The equivalent protection here is **"Clear browsing data when the profile locks"** (Settings): the selected data is erased whenever the profile locks, so while the profile is locked there is nothing to find - uninstalling the extension only reveals an already-clean profile. If the correct password is entered, you keep browsing normally and nothing extra is deleted until the next lock.
+
+### Q: Why does the extension ask for the browsingData / idle permission?
+**A:** Only when you enable the corresponding optional feature ("Clear on lock" / "Auto-lock on inactivity"). If you never enable them, the permissions are never requested.
 
 ## 📄 License
 

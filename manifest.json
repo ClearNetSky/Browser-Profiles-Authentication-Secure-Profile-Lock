@@ -1,13 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "Browser Profiles Authentication - Secure Profile Lock",
-  "version": "2.0.0",
-  "description": "Password protection for all Browser Profiles. Locks your profile on every browser start — hashed password, 100% local, no tracking.",
+  "name": "__MSG_extName__",
+  "version": "2.1.0",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "permissions": [
     "storage",
     "tabs",
     "webNavigation",
     "scripting"
+  ],
+  "optional_permissions": [
+    "browsingData",
+    "idle"
   ],
   "host_permissions": ["<all_urls>"],
   "background": {
@@ -21,6 +26,10 @@
       "32": "images/icon.png",
       "48": "images/icon.png"
     }
+  },
+  "options_ui": {
+    "page": "html/options.html",
+    "open_in_tab": true
   },
   "content_scripts": [
     {

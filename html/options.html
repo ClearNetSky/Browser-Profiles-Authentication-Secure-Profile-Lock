@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings — Secure Profile Lock</title>
+  <link rel="icon" href="../images/icon.png" type="image/png">
+  <link rel="stylesheet" href="../styles/styles.css">
+</head>
+<body class="page" data-i18n-title="options_heading">
+  <main class="card card-wide">
+    <div class="options-header">
+      <img src="../images/icon.png" alt="" class="options-logo">
+      <div>
+        <h1 data-i18n="options_heading">Settings</h1>
+        <p class="subtitle-inline" data-i18n="appName">Secure Profile Lock</p>
+      </div>
+    </div>
+
+    <section class="settings-section">
+      <h2 data-i18n="section_privacy">Privacy</h2>
+
+      <div class="setting-row">
+        <label class="switch">
+          <input type="checkbox" id="clearOnLock">
+          <span class="slider"></span>
+        </label>
+        <div class="setting-text">
+          <div class="setting-label" data-i18n="clear_on_lock_label">Clear browsing data when the profile locks</div>
+          <div class="setting-desc" data-i18n="clear_on_lock_desc">
+            When the profile locks (on browser start or manual lock), the selected data is erased.
+            A locked profile then contains no browsing traces — even if the extension is removed.
+            This affects your own data on this profile; use with care.
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-options" id="clearDataOptions">
+        <label class="check-row"><input type="checkbox" id="dataHistory"><span data-i18n="data_history">Browsing history</span></label>
+        <label class="check-row"><input type="checkbox" id="dataDownloads"><span data-i18n="data_downloads">Download history</span></label>
+        <label class="check-row"><input type="checkbox" id="dataCache"><span data-i18n="data_cache">Cache</span></label>
+        <label class="check-row"><input type="checkbox" id="dataCookies"><span data-i18n="data_cookies">Cookies (signs you out of sites)</span></label>
+        <label class="check-row"><input type="checkbox" id="dataFormData"><span data-i18n="data_formdata">Saved form data</span></label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 data-i18n="section_autolock">Auto-lock</h2>
+
+      <div class="setting-row">
+        <label class="switch">
+          <input type="checkbox" id="idleLock">
+          <span class="slider"></span>
+        </label>
+        <div class="setting-text">
+          <div class="setting-label" data-i18n="idle_lock_label">Lock automatically after inactivity</div>
+          <div class="setting-desc" data-i18n="idle_lock_desc">
+            Lock the profile after a period with no keyboard or mouse activity,
+            in addition to locking on browser start.
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-options" id="idleOptions">
+        <label class="inline-row">
+          <span data-i18n="idle_after">Lock after</span>
+          <select id="idleMinutes">
+            <option value="1">1</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="60">60</option>
+          </select>
+          <span data-i18n="minutes">minutes</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h2 data-i18n="section_language">Language</h2>
+      <label class="inline-row">
+        <span data-i18n="lang_label">Interface language</span>
+        <select id="langSelect">
+          <option value="auto" data-i18n="lang_auto">Auto (browser language)</option>
+          <option value="en">English</option>
+          <option value="ru">Русский</option>
+        </select>
+      </label>
+    </section>
+
+    <div id="message" class="message hidden" role="alert"></div>
+    <div id="toast" class="toast hidden" data-i18n="options_saved">Settings saved</div>
+
+    <footer class="card-footer" data-i18n="options_footer">All settings are stored locally on this device.</footer>
+  </main>
+
+  <script src="../scripts/i18n.js"></script>
+  <script src="../scripts/options.js"></script>
+</body>
+</html>

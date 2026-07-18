@@ -1,6 +1,8 @@
 // Secure Profile Lock — password setup / change screen logic.
 
 document.addEventListener('DOMContentLoaded', async () => {
+  await i18nReady;
+
   const card = document.getElementById('card');
   const form = document.getElementById('passwordForm');
   const currentField = document.getElementById('currentField');
@@ -24,11 +26,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       changeMode = true;
       currentField.classList.remove('hidden');
       currentInput.required = true;
-      document.getElementById('pageTitle').textContent = 'Change Password';
-      document.getElementById('pageSubtitle').textContent =
-        'Enter your current password, then choose a new one.';
-      submitBtn.textContent = 'Update Password';
-      document.title = 'Change Password — Secure Profile Lock';
+      document.getElementById('pageTitle').textContent = t('change_title');
+      document.getElementById('pageSubtitle').textContent = t('change_subtitle');
+      submitBtn.textContent = t('btn_update');
+      document.title = `${t('change_title')} — ${t('appName')}`;
     }
   } catch (e) {
     // Fall back to first-time setup mode.
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.addEventListener('click', () => {
       const show = input.type === 'password';
       input.type = show ? 'text' : 'password';
-      btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      btn.setAttribute('aria-label', show ? t('aria_hide_password') : t('aria_show_password'));
       input.focus();
     });
   };
@@ -58,12 +59,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (/\d/.test(pwd) && /[^A-Za-z0-9]/.test(pwd)) score += 1;
     return score;
   };
-  const strengthNames = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+  const strengthNames = () => [
+    '',
+    t('strength_weak'),
+    t('strength_fair'),
+    t('strength_good'),
+    t('strength_strong')
+  ];
 
   passwordInput.addEventListener('input', () => {
     const score = scorePassword(passwordInput.value);
     strength.dataset.score = String(score);
-    strengthLabel.textContent = strengthNames[score];
+    strengthLabel.textContent = strengthNames()[score];
   });
 
   // --- Submit --------------------------------------------------------------
@@ -74,28 +81,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const password = passwordInput.value;
 
     if (changeMode && !currentInput.value) {
-      showMessage('Please enter your current password.', 'error');
+      showMessage(t('err_enter_current'), 'error');
       shake();
       return;
     }
     if (password.length < 8) {
-      showMessage('The password must be at least 8 characters long.', 'error');
+      showMessage(t('err_too_short'), 'error');
       shake();
       return;
     }
     if (password !== confirmInput.value) {
-      showMessage('The passwords do not match.', 'error');
+      showMessage(t('err_mismatch'), 'error');
       shake();
       return;
     }
     if (hintInput.value.trim() === password) {
-      showMessage('The hint must not be the password itself.', 'error');
+      showMessage(t('err_hint_equals'), 'error');
       shake();
       return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving…';
+    submitBtn.textContent = t('btn_saving');
 
     try {
       const result = await chrome.runtime.sendMessage({
@@ -109,23 +116,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         showSuccess();
       } else if (result && result.error === 'wrong-current') {
         if (result.cooldownMs) {
-          showMessage(
-            `Too many attempts. Try again in ${Math.ceil(result.cooldownMs / 1000)}s.`,
-            'warning'
-          );
+          showMessage(t('cooldown', Math.ceil(result.cooldownMs / 1000)), 'warning');
         } else {
-          showMessage('The current password is incorrect.', 'error');
+          showMessage(t('err_wrong_current'), 'error');
         }
         shake();
         resetSubmit();
         currentInput.value = '';
         currentInput.focus();
       } else {
-        showMessage('Could not save the password. Please try again.', 'error');
+        showMessage(t('err_save_failed'), 'error');
         resetSubmit();
       }
     } catch (error) {
-      showMessage('Could not reach the extension. Please try again.', 'error');
+      showMessage(t('err_unreachable'), 'error');
       resetSubmit();
     }
   });
@@ -139,9 +143,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     card.querySelector('.lock-badge').classList.add('hidden');
 
     if (changeMode) {
-      document.getElementById('successTitle').textContent = 'Password Updated';
-      document.getElementById('successText').textContent =
-        'Your new password takes effect the next time the profile locks.';
+      document.getElementById('successTitle').textContent = t('success_change_title');
+      document.getElementById('successText').textContent = t('success_change_text');
     }
     successState.classList.remove('hidden');
   }
@@ -158,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function resetSubmit() {
     submitBtn.disabled = false;
-    submitBtn.textContent = changeMode ? 'Update Password' : 'Save Password';
+    submitBtn.textContent = changeMode ? t('btn_update') : t('btn_save');
   }
 
   function shake() {

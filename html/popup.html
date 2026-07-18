@@ -8,22 +8,29 @@
 <body class="popup">
   <header class="popup-header">
     <img src="../images/icon.png" alt="">
-    <div class="title">Secure Profile Lock</div>
+    <div class="title" data-i18n="appName">Secure Profile Lock</div>
   </header>
 
-  <div class="popup-body">
-    <div id="status" class="status-pill status-unlocked">Checking…</div>
+  <button type="button" class="popup-banner hidden" id="whatsnewBanner">
+    <span data-i18n="whatsnew_badge">What's new in this version</span>
+    <span class="banner-link" data-i18n="whatsnew_open">See what's new →</span>
+  </button>
 
-    <button type="button" class="btn hidden" id="lockBtn">Lock Profile Now</button>
-    <button type="button" class="btn hidden" id="setupBtn">Set Up Password</button>
-    <button type="button" class="btn btn-ghost hidden" id="changeBtn">Change Password…</button>
+  <div class="popup-body">
+    <div id="status" class="status-pill status-unlocked" data-i18n="status_checking">Checking…</div>
+
+    <button type="button" class="btn hidden" id="lockBtn" data-i18n="btn_lock_now">Lock Profile Now</button>
+    <button type="button" class="btn hidden" id="setupBtn" data-i18n="btn_setup_password">Set Up Password</button>
+    <button type="button" class="btn btn-ghost hidden" id="changeBtn" data-i18n="btn_change_password">Change Password…</button>
+    <button type="button" class="btn btn-ghost hidden" id="settingsBtn" data-i18n="btn_settings">Settings…</button>
   </div>
 
   <footer class="popup-footer">
     <span id="version"></span>
-    <span>Local only · No tracking</span>
+    <span data-i18n="popup_footer_local">Local only · No tracking</span>
   </footer>
 
+  <script src="../scripts/i18n.js"></script>
   <script src="../scripts/popup.js"></script>
 </body>
 </html>
